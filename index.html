@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NOGRUP Card Maker</title>
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+<header>
+  <h1 id="gameTitleDisplay">NOGRUP — card maker</h1>
+  <p>Build your deck, then print and cut. Cards are standard poker size (2.5 x 3.5 in).</p>
+</header>
+
+<div class="tabs no-print">
+  <button class="tab-btn active" data-tab="build">Add stickers</button>
+  <button class="tab-btn" data-tab="prompts">Add prompts</button>
+  <button class="tab-btn" data-tab="print">Print stickers</button>
+  <button class="tab-btn" data-tab="printPrompts">Print prompts</button>
+</div>
+
+<main>
+
+  <div class="panel active" id="panel-build">
+    <div class="row">
+      <div>
+        <label class="small">Game / group name (shows on card corner)</label>
+        <input type="text" id="gameTitle" value="NOGRUP" placeholder="e.g. Sibiu crew meme night">
+      </div>
+    </div>
+
+    <div class="row">
+      <div>
+        <label class="small">Add photo cards (photos or WhatsApp stickers)</label>
+        <input type="file" id="photoInput" accept="image/*" multiple>
+      </div>
+      <button class="btn secondary" id="rotateAllBtn" style="align-self:flex-end;">Rotate all stickers left</button>
+    </div>
+    <p class="hint">
+      Upload any image, then optionally add a short caption underneath (like a punchline). Looking for the prompt cards? Those live in the "Add prompts" tab.
+    </p>
+
+    <div id="deckContainer">
+      <div class="empty-state" id="emptyState">No stickers yet. Upload some images above.</div>
+      <div class="deck-grid" id="deckGrid"></div>
+    </div>
+  </div>
+
+  <div class="panel" id="panel-prompts">
+    <div class="row" style="align-items:flex-start;">
+      <div style="flex:1; min-width:280px;">
+        <label class="small">Paste or type your prompts (one per line)</label>
+        <textarea id="bulkPromptInput" rows="6" style="width:100%; font-family:inherit; font-size:14px; padding:10px; border:1.5px solid #cfcabf; border-radius:6px; resize:vertical;" placeholder="That moment when...&#10;When you realize...&#10;Nobody:&#10;Me at 3am:"></textarea>
+      </div>
+      <button class="btn secondary" id="addBulkPromptsBtn" style="align-self:flex-end;">+ Add these prompts</button>
+    </div>
+    <p class="hint">
+      Each line becomes its own prompt card. Prompt cards are the ones you read aloud — everyone matches a sticker card to them.
+    </p>
+
+    <div class="row">
+      <div>
+        <label class="small">Rotate all prompt text</label>
+        <select id="bulkRotateSelect">
+          <option value="0">0°</option>
+          <option value="90">90°</option>
+          <option value="180">180°</option>
+          <option value="270">270°</option>
+        </select>
+      </div>
+      <button class="btn secondary" id="applyBulkRotateBtn" style="align-self:flex-end;">Apply to all prompts</button>
+    </div>
+
+    <div id="promptContainer">
+      <div class="empty-state" id="emptyPromptState">No prompts yet. Add some above.</div>
+      <div id="promptList"></div>
+    </div>
+  </div>
+
+  <div class="panel" id="panel-print">
+    <div class="print-controls no-print">
+      <span style="font-size:13px; color:var(--muted);"><strong id="cardCountStickers">0</strong> stickers ready to print</span>
+      <div>
+        <label class="small">Paper size</label>
+        <select id="paperSize">
+          <option value="letter">Letter (8.5 x 11 in)</option>
+          <option value="a4" selected>A4 (210 x 297 mm)</option>
+        </select>
+      </div>
+      <div>
+        <label class="small">Cards per page</label>
+        <select id="cardsPerPage">
+          <option value="4">4 (large)</option>
+          <option value="8" selected>8</option>
+          <option value="12">12 (small)</option>
+        </select>
+      </div>
+      <button class="btn" id="printBtnStickers" style="align-self:flex-end;">Print this sheet</button>
+      <button class="btn secondary" id="downloadBtnStickers" style="align-self:flex-end;">Download PDFs (.zip)</button>
+    </div>
+    <p class="hint no-print">
+      Downloads one PDF per sheet (one per pack of cards), bundled into a single .zip folder — matches exactly what you see below, at true paper size.
+    </p>
+    <p class="hint no-print">
+      Cut lines are the card borders themselves — trim along them with scissors or a paper cutter. Print at "actual size / 100%" (not "fit to page") for consistent sizing across sheets.
+    </p>
+    <div id="printSheetStickers"></div>
+  </div>
+
+  <div class="panel" id="panel-printPrompts">
+    <div class="print-controls no-print">
+      <span style="font-size:13px; color:var(--muted);"><strong id="cardCountPrompts">0</strong> prompts ready to print</span>
+      <div>
+        <label class="small">Paper size</label>
+        <select id="paperSizePrompts">
+          <option value="letter">Letter (8.5 x 11 in)</option>
+          <option value="a4" selected>A4 (210 x 297 mm)</option>
+        </select>
+      </div>
+      <div>
+        <label class="small">Cards per page</label>
+        <select id="cardsPerPagePrompts">
+          <option value="6">6 (large)</option>
+          <option value="8">8</option>
+          <option value="12">12</option>
+          <option value="16" selected>16</option>
+          <option value="20">20 (small)</option>
+        </select>
+      </div>
+      <button class="btn" id="printBtnPrompts" style="align-self:flex-end;">Print this sheet</button>
+      <button class="btn secondary" id="downloadBtnPrompts" style="align-self:flex-end;">Download PDFs (.zip)</button>
+    </div>
+    <p class="hint no-print">
+      Prompt cards are text-only, so more fit per page than stickers. Same border style, same cutting rules — downloads bundle into a single .zip, one PDF per sheet.
+    </p>
+    <div id="printSheetPrompts"></div>
+  </div>
+
+</main>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="js/app.js"></script>
+
+
+</body>
+</html>
